@@ -42,7 +42,7 @@ mkdir -p ${HOME}/.config/alacritty
 ```
 
 ```bash
-ln -s $(pwd)/alacritty.yml ${HOME}/.config/alacritty/alacritty.yml
+ln -s $(pwd)/alacritty.toml ${HOME}/.config/alacritty/alacritty.toml
 ```
 
 ## Install Aerospace
