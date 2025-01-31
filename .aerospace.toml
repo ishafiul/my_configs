@@ -218,10 +218,14 @@ T = 'VG248'
 if.app-id = "com.apple.Terminal"
 run = "move-node-to-workspace T"
 
+[[on-window-detected]]
+if.app-id = "org.alacritty"
+run = "move-node-to-workspace T"
 
 [[on-window-detected]]
 if.app-id = "com.hnc.Discord"
 run = "move-node-to-workspace C"
+
 [[on-window-detected]]
 if.app-id = "com.clickup.desktop-app"
 run = "move-node-to-workspace C"
@@ -229,7 +233,6 @@ run = "move-node-to-workspace C"
 [[on-window-detected]]
 if.app-id = "com.google.android.studio"
 run = "move-node-to-workspace W"
-
 
 [[on-window-detected]]
 if.app-id = "company.thebrowser.Browser"
@@ -242,6 +245,7 @@ run = "move-node-to-workspace Q"
 [[on-window-detected]]
 if.app-id = "com.apple.systempreference"
 run = "move-node-to-workspace G"
+
 [[on-window-detected]]
 if.app-id = "com.todesktop.230313mzl4w4u92"
 run = "move-node-to-workspace W"
