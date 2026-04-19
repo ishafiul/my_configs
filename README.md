@@ -1,58 +1,50 @@
+# My Configs
+
+Personal macOS dev environment for Aerospace, tmux, Ghostty, and LazyVim.
+
 ## Setup
+
 ```bash
 git clone https://github.com/ishafiul/my_configs.git
-```
-```bash
 cd my_configs
-```
-## Install tmux
-
-```bash
-brew install tmux
-```
-## Setup tpm
-
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+./install.sh
 ```
 
-## Setup tmux config
+## What `install.sh` does
 
-```bash
-ln -s $(pwd)/.tmux.conf ${HOME}/.tmux.conf
-```
+- Installs missing Homebrew tools: `git`, `tmux`, `neovim`, `ripgrep`, `fd`, `tree-sitter`, `stylua`
+- Installs apps/fonts: `Ghostty`, `Aerospace`, `Hurmit Nerd Font`
+- Installs `asdf` (if missing) and configures plugins for `nodejs`, `flutter`, `pnpm`
+- Installs runtime versions from this repo
+- Installs tmux plugin manager (`tpm`)
+- Creates symlinks:
+  - `aerospace.toml` -> `~/.aerospace.toml`
+  - `.tmux.conf` -> `~/.tmux.conf`
+  - `ghostty` -> `~/.config/ghostty/config`
+  - `nvim` -> `~/.config/nvim`
 
-### Setup Plugins
+## Runtime versions
 
-```
-tmux
-<prefix>I
-```
+Pinned in `.tool-versions`:
 
-## Install Alacritty
+- `nodejs 25.9.0`
+- `flutter 3.41.7-stable`
+- `pnpm` (resolved to latest available via asdf during install)
 
-```bash
-brew install --cask alacritty
-```
+## Neovim highlights
 
-## Setup Alacritty
+- LazyVim-based setup with TypeScript, JSON, Tailwind, and Flutter tooling
+- JS/TS/JSON formatting via Biome (`conform.nvim` uses `biome`)
+- LSP managed through Mason + `nvim-lspconfig`
 
-```bash
-mkdir -p ${HOME}/.config/alacritty
-```
+## After install
 
-```bash
-ln -s $(pwd)/alacritty.toml ${HOME}/.config/alacritty/alacritty.toml
-```
+- Reload Aerospace config: `aerospace reload-config`
+- In tmux, install plugins: `prefix + I`
+- Open `nvim` once and run `:Lazy sync`
+- Optional health checks: `:checkhealth` and `:LazyVimHealth`
 
-## Install Aerospace
+## Command references
 
-```bash
-brew install --cask nikitabobko/tap/aerospace
-```
-
-## Setup Aerospace
-
-```bash
-ln -s $(pwd)/.aerospace.toml ${HOME}/.aerospace.toml
-```
+- LazyVim cheatsheet: `LAZYVIM_COMMANDS.md`
+- tmux cheatsheet: `TMUX_COMMANDS.md`

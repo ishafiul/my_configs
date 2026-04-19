@@ -1,0 +1,4 @@
+# Ghostty Configuration
+window-decoration = false
+maximize = true
+command = /opt/homebrew/bin/tmux new-session -A -s main
