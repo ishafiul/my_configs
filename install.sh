@@ -138,11 +138,22 @@ else
     echo "tpm already installed"
 fi
 
+tmux_plugins_installed=false
+
 echo "Creating symlinks..."
 ln -sf "$CONFIG_DIR/aerospace.toml" "$HOME/.aerospace.toml"
 ln -sf "$CONFIG_DIR/.tmux.conf" "$HOME/.tmux.conf"
+mkdir -p "$HOME/.tmux/resurrect"
 mkdir -p "$HOME/.config/ghostty"
 ln -sf "$CONFIG_DIR/ghostty" "$HOME/.config/ghostty/config"
+
+if [ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
+    echo "Installing tmux plugins from ~/.tmux.conf via TPM..."
+    tmux start-server \; set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins"
+    "$HOME/.tmux/plugins/tpm/bin/install_plugins" && tmux_plugins_installed=true
+else
+    echo "TPM install script not found; skipping tmux plugin auto-install"
+fi
 
 # LazyVim / Neovim config
 mkdir -p "$HOME/.config"
@@ -155,5 +166,7 @@ ln -sfn "$CONFIG_DIR/nvim" "$HOME/.config/nvim"
 
 echo "Done."
 echo "- Reload aerospace: aerospace reload-config"
-echo "- Install tmux plugins inside tmux: prefix + I"
+if [ "$tmux_plugins_installed" = false ]; then
+    echo "- Install tmux plugins inside tmux: prefix + I"
+fi
 echo "- Open nvim once to let LazyVim install plugins"

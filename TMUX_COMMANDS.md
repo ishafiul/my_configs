@@ -3,9 +3,18 @@
 Prefix key is `Ctrl+b` by default.
 
 ## Sessions
-- New session: `tmux new -s main`
+- New session (outside tmux): `tmux new -s main`
+- New session (inside tmux): `prefix` then `:` then `new-session -s main`
+- New detached session (inside/outside): `tmux new-session -d -s main`
 - List sessions: `tmux ls`
-- Attach to session: `tmux attach -t main`
+- Switch session (inside tmux): `prefix` then `s` (session picker)
+- Switch to named session (inside tmux): `prefix` then `:` then `switch-client -t main`
+- Next session (inside tmux): `prefix` then `)`
+- Previous session (inside tmux): `prefix` then `(`
+- Rename current session (inside tmux): `prefix` then `$`
+- Rename session (inside tmux command mode): `prefix` then `:` then `rename-session new_name`
+- Rename session (from shell): `tmux rename-session -t old_name new_name`
+- Attach to session (outside tmux): `tmux attach -t main`
 - Detach from session: `prefix` then `d`
 - Kill session: `tmux kill-session -t main`
 
