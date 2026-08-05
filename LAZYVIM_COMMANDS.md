@@ -6,6 +6,8 @@
 - Save: `:w`
 - Save and quit: `:wq`
 - Force quit: `:q!`
+- Undo: `u`
+- Redo: `Ctrl-r`
 
 ## Lazy Plugin Manager
 - Open Lazy UI: `:Lazy`
@@ -19,7 +21,12 @@
 - Live grep text: `<leader>/`
 - Recent files: `<leader>fr`
 - Buffers: `<leader>,`
-- File explorer: `<leader>e`
+- Show project file tree: `<leader>e` (`Space e`)
+- Hide project file tree: `Esc` while explorer is focused
+- Show symbol docs: hold mouse over a class, method, or property for 0.5 seconds
+- Show symbol docs manually: `K`
+- Copy docs text: click popup, `v` to select, then `y` to copy
+- Copy docs text to macOS clipboard: `"+y`
 
 ## LSP / Code
 - Go to definition: `gd`

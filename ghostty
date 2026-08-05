@@ -1,4 +1,6 @@
 # Ghostty Configuration
 window-decoration = false
 maximize = true
+font-family = "JetBrainsMono Nerd Font"
+font-family = "Noto Sans Bengali UI"
 command = /opt/homebrew/bin/tmux new-session -A -s main

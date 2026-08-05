@@ -211,6 +211,7 @@ shift-down = ['volume set 0', 'mode main']
 [workspace-to-monitor-force-assignment]
 Q = ['dell.*']
 C = ['dell.*']
+B = ['dell.*']
 W = 'VG248'
 T = 'VG248'
 

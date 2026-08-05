@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+set -eu
+
+tmux_bin="/opt/homebrew/bin/tmux"
+restore_script="$HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh"
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+if "$tmux_bin" has-session -t main 2>/dev/null; then
+  exec /usr/bin/open -a Ghostty
+fi
+
+"$tmux_bin" new-session -d -s main
+
+if [ -x "$restore_script" ]; then
+  "$restore_script"
+fi
+
+exec /usr/bin/open -a Ghostty

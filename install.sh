@@ -76,6 +76,39 @@ install_cask_if_missing() {
     fi
 }
 
+install_cask_package_if_missing() {
+    local cask="$1"
+    if brew list --cask "$cask" >/dev/null 2>&1; then
+        echo "$cask already installed"
+    else
+        echo "Installing $cask..."
+        brew install --cask "$cask"
+    fi
+}
+
+install_first_available_cask() {
+    local label="$1"
+    shift
+    local cask
+
+    for cask in "$@"; do
+        if brew list --cask "$cask" >/dev/null 2>&1; then
+            echo "$cask already installed"
+            return 0
+        fi
+
+        echo "Trying $cask for $label..."
+        if brew install --cask "$cask" >/dev/null 2>&1; then
+            install_cask_package_if_missing "$cask"
+            return 0
+        fi
+    done
+
+    echo "Could not install a cask for $label."
+    echo "Tried: $*"
+    return 1
+}
+
 # Core tools
 install_formula_if_missing git git
 install_formula_if_missing tmux tmux
@@ -122,11 +155,18 @@ else
 fi
 
 # Fonts
-if [ ! -f "$HOME/Library/Fonts/HurmitNerdFontMono-Regular.otf" ]; then
-    echo "Installing Hurmit Nerd Font..."
-    brew install --cask font-hurmit-nerd-font
-else
-    echo "Hurmit Nerd Font already installed"
+if ! install_first_available_cask "monospace Nerd font" \
+    font-jetbrains-mono-nerd-font \
+    font-hurmit-nerd-font; then
+    echo "Warning: Could not install a Nerd font cask via Homebrew."
+fi
+
+if ! install_first_available_cask "Bangla Noto font" \
+    font-noto-sans-bengali-ui \
+    font-noto-sans-bengali \
+    font-noto-serif-bengali; then
+    echo "Warning: Could not install Bangla Noto font via Homebrew."
+    echo "Install manually: Noto Sans Bengali UI (or Noto Serif Bengali)."
 fi
 
 # Tmux plugin manager
@@ -146,6 +186,11 @@ ln -sf "$CONFIG_DIR/.tmux.conf" "$HOME/.tmux.conf"
 mkdir -p "$HOME/.tmux/resurrect"
 mkdir -p "$HOME/.config/ghostty"
 ln -sf "$CONFIG_DIR/ghostty" "$HOME/.config/ghostty/config"
+mkdir -p "$HOME/Library/LaunchAgents"
+mkdir -p "$HOME/Library/Application Support/my-configs"
+chmod +x "$CONFIG_DIR/start-ghostty-tmux"
+install -m 755 "$CONFIG_DIR/start-ghostty-tmux" "$HOME/Library/Application Support/my-configs/start-ghostty-tmux"
+ln -sf "$CONFIG_DIR/dev.shafi.ghostty-tmux.plist" "$HOME/Library/LaunchAgents/dev.shafi.ghostty-tmux.plist"
 
 if [ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
     echo "Installing tmux plugins from ~/.tmux.conf via TPM..."
@@ -166,6 +211,7 @@ ln -sfn "$CONFIG_DIR/nvim" "$HOME/.config/nvim"
 
 echo "Done."
 echo "- Reload aerospace: aerospace reload-config"
+echo "- Ghostty will open automatically at next login"
 if [ "$tmux_plugins_installed" = false ]; then
     echo "- Install tmux plugins inside tmux: prefix + I"
 fi
