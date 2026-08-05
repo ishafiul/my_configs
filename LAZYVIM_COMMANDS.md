@@ -36,6 +36,19 @@
 - Code actions: `<leader>ca`
 - Format file: `<leader>cf`
 
+## Flutter
+- Open one-line Flutter controls: `<leader>F` (`Space Shift+f`)
+- Run Flutter: `F5`
+- First available Flutter device and first Dart launch configuration select automatically
+- Choose device: click `[⌁ Device]` or use `:FlutterDevices`
+- Choose `.vscode/launch.json` config: click `[⚙ Config]` or use `:FlutterConfig`
+- Launch emulator: click `[▣ Emulator]` or use `:FlutterEmulators`
+- Run selected device: click `[▶ Run]` or use `:FlutterRun`
+- Run/log terminal: opens in a bottom panel and closes when the app stops
+- Hot reload: click `[↻ Reload]` or use `:FlutterReload`
+- Hot restart: click `[⟳ Restart]` or use `:FlutterRestart`
+- Stop app: click `[■ Stop]` or use `:FlutterStop`
+
 ## Diagnostics
 - Next diagnostic: `]d`
 - Previous diagnostic: `[d`

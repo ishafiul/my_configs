@@ -156,8 +156,7 @@ fi
 
 # Fonts
 if ! install_first_available_cask "monospace Nerd font" \
-    font-jetbrains-mono-nerd-font \
-    font-hurmit-nerd-font; then
+    font-jetbrains-mono-nerd-font; then
     echo "Warning: Could not install a Nerd font cask via Homebrew."
 fi
 

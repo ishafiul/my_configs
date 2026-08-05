@@ -13,7 +13,7 @@ cd my_configs
 ## What `install.sh` does
 
 - Installs missing Homebrew tools: `git`, `tmux`, `neovim`, `ripgrep`, `fd`, `tree-sitter`, `stylua`
-- Installs apps/fonts: `Ghostty`, `Aerospace`, `Hurmit Nerd Font`
+- Installs apps/fonts: `Ghostty`, `Aerospace`, `JetBrains Mono Nerd Font`
 - Installs `asdf` (if missing) and configures plugins for `nodejs`, `flutter`, `pnpm`
 - Installs runtime versions from this repo
 - Installs tmux plugin manager (`tpm`)
