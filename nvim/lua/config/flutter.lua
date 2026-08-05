@@ -11,6 +11,9 @@ local state = {
   launch_config = nil,
   workspace_root = nil,
   root = nil,
+  controls_row = 1,
+  controls_col = nil,
+  drag = nil,
 }
 
 local controls = {
@@ -91,31 +94,6 @@ local function load_launch_file()
   return launch
 end
 
-local function auto_select_config()
-  if state.launch_config then
-    return
-  end
-
-  local launch = load_launch_file()
-  if not launch then
-    return
-  end
-
-  for _, config in ipairs(launch.configurations or {}) do
-    if config.type == "dart" then
-      state.launch_config = config
-      state.launch_kind = "config"
-      return
-    end
-  end
-
-  local first = (launch.configurations or {})[1]
-  if first then
-    state.launch_config = first
-    state.launch_kind = "config"
-  end
-end
-
 local function write_controls()
   if not (
     state.controls_buf
@@ -137,9 +115,23 @@ local function write_controls()
   vim.api.nvim_win_set_config(state.controls_win, { title = string.format(" Flutter • %s • %s • %s ", status, device, config) })
 end
 
+local function move_controls(delta_row, delta_col)
+  if not (state.controls_win and vim.api.nvim_win_is_valid(state.controls_win)) then
+    return
+  end
+
+  local width = vim.fn.strdisplaywidth(controls_line())
+  state.controls_row = math.max(0, math.min(vim.o.lines - 2, state.controls_row + delta_row))
+  state.controls_col = math.max(0, math.min(vim.o.columns - width - 2, state.controls_col + delta_col))
+  vim.api.nvim_win_set_config(state.controls_win, {
+    relative = "editor",
+    row = state.controls_row,
+    col = state.controls_col,
+  })
+end
+
 local function open_controls()
   flutter_root()
-  auto_select_config()
   M.auto_select_device()
   if state.controls_win and vim.api.nvim_win_is_valid(state.controls_win) then
     write_controls()
@@ -149,16 +141,18 @@ local function open_controls()
   state.controls_buf = vim.api.nvim_create_buf(false, true)
   vim.bo[state.controls_buf].bufhidden = "wipe"
   vim.bo[state.controls_buf].filetype = "flutter-controls"
+  local width = vim.fn.strdisplaywidth(controls_line())
+  state.controls_col = state.controls_col or math.max(0, vim.o.columns - width - 4)
   state.controls_win = vim.api.nvim_open_win(state.controls_buf, false, {
     border = "rounded",
-    col = math.max(0, vim.o.columns - vim.fn.strdisplaywidth(controls_line()) - 4),
+    col = state.controls_col,
     focusable = true,
     height = 1,
     relative = "editor",
-    row = 1,
+    row = state.controls_row,
     style = "minimal",
     title = " Flutter ",
-    width = vim.fn.strdisplaywidth(controls_line()),
+    width = width,
     zindex = 60,
   })
   vim.api.nvim_set_hl(0, "FlutterControls", { fg = "#c8d3f5", bg = "#1e2030", bold = true })
@@ -173,6 +167,30 @@ local function open_controls()
     end,
   })
   vim.keymap.set("n", "<LeftMouse>", function()
+    local position = vim.fn.getmousepos()
+    state.drag = {
+      row = position.screenrow,
+      col = position.screencol,
+      moved = false,
+    }
+  end, { buffer = state.controls_buf, silent = true })
+  vim.keymap.set("n", "<LeftDrag>", function()
+    local drag = state.drag
+    if not drag then
+      return
+    end
+    local position = vim.fn.getmousepos()
+    move_controls(position.screenrow - drag.row, position.screencol - drag.col)
+    drag.row = position.screenrow
+    drag.col = position.screencol
+    drag.moved = true
+  end, { buffer = state.controls_buf, silent = true })
+  vim.keymap.set("n", "<LeftRelease>", function()
+    local drag = state.drag
+    state.drag = nil
+    if not drag or drag.moved then
+      return
+    end
     local position = vim.fn.getmousepos()
     local actions = { M.run, M.select_device, M.select_config, M.launch_emulator, M.reload, M.restart, M.stop }
     local column = 1
@@ -411,7 +429,6 @@ function M.select_config()
 end
 
 function M.run()
-  auto_select_config()
   local config = state.launch_config
   if state.launch_kind == "compound" and config then
     local path = launch_file()

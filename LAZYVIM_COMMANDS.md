@@ -39,7 +39,7 @@
 ## Flutter
 - Open one-line Flutter controls: `<leader>F` (`Space Shift+f`)
 - Run Flutter: `F5`
-- First available Flutter device and first Dart launch configuration select automatically
+- First available Flutter device selects automatically
 - Choose device: click `[⌁ Device]` or use `:FlutterDevices`
 - Choose `.vscode/launch.json` config: click `[⚙ Config]` or use `:FlutterConfig`
 - Launch emulator: click `[▣ Emulator]` or use `:FlutterEmulators`
